@@ -6,12 +6,774 @@
   <title>Caseta La Tertulia · Feria de Jerez</title>
   <style>
     /* ===== INICIO: ESTILOS ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&display=swap');
+
+    :root {
+      --bg-dark: #09070f;
+      --bg-card: rgba(22, 17, 35, 0.7);
+      --border-card: rgba(255, 255, 255, 0.12);
+      --gold-primary: #f59e0b;
+      --gold-light: #fef08a;
+      --red-accent: #e11d48;
+      --crimson-glow: rgba(225, 29, 72, 0.3);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ===== SECCIÓN PORTADA (GETLAYERS ESTILO) ===== */
+    .hero-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      background: radial-gradient(circle at 50% 20%, #1e1333 0%, var(--bg-dark) 70%);
+      overflow: hidden;
+    }
+
+    /* Canvas de Luces / Farolillos */
+    #feria-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Resplandor ambiental de fondo */
+    .ambient-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glow-1 {
+      width: 450px;
+      height: 450px;
+      background: rgba(245, 158, 11, 0.15);
+      top: 10%;
+      left: 15%;
+    }
+
+    .glow-2 {
+      width: 500px;
+      height: 500px;
+      background: rgba(225, 29, 72, 0.15);
+      bottom: 10%;
+      right: 15%;
+    }
+
+    /* Contenedor principal de la Portada */
+    .hero-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 60px;
+        padding-top: 40px;
+      }
+    }
+
+    /* COLUMNA IZQUIERDA: CONTENIDO */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--gold-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--gold-primary);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold-primary) 50%, #f43f5e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-description {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 36px;
+      max-width: 580px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* BOTONES ESTILO LAYERS.AI */
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-actions {
+        justify-content: center;
+      }
+    }
+
+    .btn-layers-primary {
+      position: relative;
+      padding: 16px 32px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px var(--crimson-glow);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-layers-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-layers-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(225, 29, 72, 0.45);
+    }
+
+    .btn-layers-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-layers-secondary {
+      padding: 16px 32px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid var(--border-card);
+      backdrop-filter: blur(12px);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-layers-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-3px);
+    }
+
+    /* ESTADÍSTICAS / STATS */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-item h4 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--gold-primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .stat-item p {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* COLUMNA DERECHA: APILAMIENTO DE CAPAS INTERACTIVAS (LAYERS) */
+    .layers-stage-container {
+      perspective: 1200px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Selector de Capas */
+    .layer-tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(15, 11, 26, 0.8);
+      padding: 6px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-card);
+      margin-bottom: 28px;
+      backdrop-filter: blur(16px);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold-primary), #d97706);
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Tarjetas apiladas 3D */
+    .layers-stack {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      height: 480px;
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out;
+    }
+
+    .layer-card {
+      position: absolute;
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                  0 0 30px rgba(255, 255, 255, 0.03) inset;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+    }
+
+    /* Posicionamiento relativo de las 3 capas */
+    .layer-card[data-layer="1"] {
+      top: 0;
+      z-index: 3;
+      transform: translateZ(40px) translateY(0px) rotateX(2deg);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .layer-card[data-layer="2"] {
+      top: 30px;
+      z-index: 2;
+      transform: translateZ(20px) translateY(20px) scale(0.96);
+      opacity: 0.85;
+    }
+
+    .layer-card[data-layer="3"] {
+      top: 60px;
+      z-index: 1;
+      transform: translateZ(0px) translateY(40px) scale(0.92);
+      opacity: 0.65;
+    }
+
+    /* Estado de capa enfocada cuando se selecciona en tabs */
+    .layers-stack.focus-1 .layer-card[data-layer="1"] { z-index: 3; transform: translateZ(50px) translateY(0) scale(1); opacity: 1; }
+    .layers-stack.focus-1 .layer-card[data-layer="2"] { z-index: 2; transform: translateZ(20px) translateY(35px) scale(0.95); opacity: 0.7; }
+    .layers-stack.focus-1 .layer-card[data-layer="3"] { z-index: 1; transform: translateZ(0px) translateY(70px) scale(0.9); opacity: 0.4; }
+
+    .layers-stack.focus-2 .layer-card[data-layer="2"] { z-index: 3; transform: translateZ(50px) translateY(-10px) scale(1); opacity: 1; border-color: rgba(225, 29, 72, 0.4); }
+    .layers-stack.focus-2 .layer-card[data-layer="1"] { z-index: 2; transform: translateZ(20px) translateY(40px) scale(0.95); opacity: 0.7; }
+    .layers-stack.focus-2 .layer-card[data-layer="3"] { z-index: 1; transform: translateZ(0px) translateY(80px) scale(0.9); opacity: 0.4; }
+
+    .layers-stack.focus-3 .layer-card[data-layer="3"] { z-index: 3; transform: translateZ(50px) translateY(-20px) scale(1); opacity: 1; border-color: rgba(168, 85, 247, 0.4); }
+    .layers-stack.focus-3 .layer-card[data-layer="1"] { z-index: 1; transform: translateZ(0px) translateY(80px) scale(0.9); opacity: 0.4; }
+    .layers-stack.focus-3 .layer-card[data-layer="2"] { z-index: 2; transform: translateZ(20px) translateY(30px) scale(0.95); opacity: 0.7; }
+
+    /* CONTENIDO INTERNO DE LAS TARJETAS */
+    .card-header-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tag-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pill-gold { background: rgba(245, 158, 11, 0.2); color: var(--gold-light); border: 1px solid rgba(245, 158, 11, 0.4); }
+    .pill-red { background: rgba(225, 29, 72, 0.2); color: #fecdd3; border: 1px solid rgba(225, 29, 72, 0.4); }
+    .pill-purple { background: rgba(168, 85, 247, 0.2); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.4); }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* Ecualizador / Audio Visualizer Simulado */
+    .live-music-widget {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 28px;
+    }
+
+    .eq-bar {
+      width: 4px;
+      background: var(--gold-primary);
+      border-radius: 2px;
+      animation: eqBounce 1.2s ease-in-out infinite alternate;
+    }
+
+    .eq-bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+    .eq-bar:nth-child(2) { height: 85%; animation-delay: 0.3s; }
+    .eq-bar:nth-child(3) { height: 60%; animation-delay: 0.2s; }
+    .eq-bar:nth-child(4) { height: 100%; animation-delay: 0.4s; }
+
+    @keyframes eqBounce {
+      0% { height: 20%; }
+      100% { height: 100%; }
+    }
+
+    .music-info {
+      flex: 1;
+    }
+
+    .music-info h5 {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .music-info p {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    /* Grid de Tapas / Bebidas */
+    .food-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .food-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Modal / Toast emergente de confirmación */
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(22, 17, 35, 0.95);
+      border: 1px solid var(--gold-primary);
+      color: var(--text-main);
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      z-index: 9999;
+      transform: translateY(150%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+    }
     /* ===== FIN: ESTILOS ===== */
   </style>
 </head>
 <body>
   <!-- INICIO: MENÚ --> <!-- FIN: MENÚ -->
-  <!-- INICIO: PORTADA --> <!-- FIN: PORTADA -->
+ <!-- INICIO: PORTADA -->
+  <section class="hero-wrapper">
+    <!-- Canvas animado de luces y bokeh -->
+    <canvas id="feria-canvas"></canvas>
+
+    <!-- Resplandores ambientales -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="hero-container">
+      <!-- Columna Izquierda: Presentación y Acciones -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>Feria del Caballo 2027 · Real de la Feria · Caseta nº 42</span>
+        </div>
+
+        <h1 class="hero-title">
+          La Esencia Jerezana <br>
+          <span class="gradient-text">En Cada Capa</span>
+        </h1>
+
+        <p class="hero-description">
+          Bienvenido a <strong>Caseta La Tertulia</strong>. Vive la pasión del flamenco en directo, la mejor gastronomía tradicional y el rebujito más fresco en un ambiente exclusivo diseñado para compartir.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn-layers-primary" onclick="triggerToast('Mesa solicitada. Nos pondremos en contacto para confirmar tu reserva.')">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Reservar Mesa
+          </button>
+
+          <button class="btn-layers-secondary" onclick="triggerToast('Cargando la carta completa de vino y tapas...')">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            Ver Carta & Menú
+          </button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h4>+25</h4>
+            <p>Años de Feria</p>
+          </div>
+          <div class="stat-item">
+            <h4>100%</h4>
+            <p>Vino de Jerez</p>
+          </div>
+          <div class="stat-item">
+            <h4>24/7</h4>
+            <p>Buen Ambiente</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Componente Interactivo de Capas 3D (GetLayers.ai style) -->
+      <div class="layers-stage-container">
+        <!-- Selector interactivo de capas -->
+        <div class="layer-tabs">
+          <button class="tab-btn active" onclick="switchLayer(1)">En Directo</button>
+          <button class="tab-btn" onclick="switchLayer(2)">Gastronomía</button>
+          <button class="tab-btn" onclick="switchLayer(3)">Ambiente</button>
+        </div>
+
+        <!-- Apilamiento de tarjetas 3D -->
+        <div class="layers-stack focus-1" id="layersStack">
+          
+          <!-- Capa 1: Espectáculo / Flamenco -->
+          <div class="layer-card" data-layer="1">
+            <div class="card-header-badge">
+              <span class="tag-pill pill-gold">🔴 AHORA EN ESCENARIO</span>
+              <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--gold-primary);">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+            </div>
+            <h3 class="card-title">Cuadro Flamenco "Aire Jerezano"</h3>
+            <p class="card-desc">Disfruta del auténtico cante, baile y toque por bulerías en directo. Dos pases diarios con artistas locales de primer nivel.</p>
+            
+            <div class="live-music-widget">
+              <div class="equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+              <div class="music-info">
+                <h5>Pase Especial Noche</h5>
+                <p>22:30 h · Entrada Libre</p>
+              </div>
+              <button style="background: rgba(255,255,255,0.1); border:none; color:#fff; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer;" onclick="triggerToast('Añadido a tus recordatorios de la Feria.')">
+                🔔 Unirse
+              </button>
+            </div>
+          </div>
+
+          <!-- Capa 2: Sabores y Rebujito -->
+          <div class="layer-card" data-layer="2">
+            <div class="card-header-badge">
+              <span class="tag-pill pill-red">🍷 GASTRONOMÍA & BODEGA</span>
+              <span style="font-size:0.8rem; color:var(--text-sub);">Carta Tradicional</span>
+            </div>
+            <h3 class="card-title">Genuino Sabor de Nuestra Tierra</h3>
+            <p class="card-desc">Maridajes perfectos con fino y manzanilla de las mejores bodegas de Jerez, acompañados de productos ibéricos cortados al momento.</p>
+            
+            <div class="food-grid">
+              <div class="food-item">
+                <span>🥓</span> Jamón Ibérico 100%
+              </div>
+              <div class="food-item">
+                <span>🍾</span> Jarra de Rebujito
+              </div>
+              <div class="food-item">
+                <span>🥘</span> Tortillitas de Camarones
+              </div>
+              <div class="food-item">
+                <span>🦐</span> Gambas de Huelva
+              </div>
+            </div>
+          </div>
+
+          <!-- Capa 3: La Caseta / Espacio -->
+          <div class="layer-card" data-layer="3">
+            <div class="card-header-badge">
+              <span class="tag-pill pill-purple">✨ ATMÓSFERA ÚNICA</span>
+              <span style="font-size:0.8rem; color:var(--text-sub);">Climatizada</span>
+            </div>
+            <h3 class="card-title">Un Rincón de Encuentro</h3>
+            <p class="card-desc">Decoración tradicional con toque moderno, zona VIP para reservas, terraza exterior iluminada con farolillos y el mejor servicio.</p>
+            <div style="background: rgba(168, 85, 247, 0.1); padding: 12px; border-radius: 12px; border: 1px dashed rgba(168, 85, 247, 0.3); font-size: 0.85rem; color: #e9d5ff;">
+              📍 Ubicación: Calle González Hontoria, Caseta 42.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Notificación emergente estilo Toast -->
+    <div id="toast" class="toast-notification">
+      <span style="font-size: 1.2rem;">💃</span>
+      <span id="toast-message">Mensaje de prueba</span>
+    </div>
+  </section>
+
+  <script>
+    /* ===== LÓGICA DE INTERACCIÓN DE CAPAS Y CANVAS ===== */
+
+    // 1. Alternador de Capas (Layers Switcher)
+    function switchLayer(layerNumber) {
+      const stack = document.getElementById('layersStack');
+      const buttons = document.querySelectorAll('.tab-btn');
+      
+      stack.className = 'layers-stack focus-' + layerNumber;
+      
+      buttons.forEach((btn, index) => {
+        if (index + 1 === layerNumber) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // 2. Efecto de inclinación 3D con el movimiento del ratón
+    const layersStage = document.querySelector('.layers-stage-container');
+    const layersStack = document.getElementById('layersStack');
+
+    if (layersStage && layersStack) {
+      layersStage.addEventListener('mousemove', (e) => {
+        const rect = layersStage.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        const rotateX = (-y / rect.height) * 18;
+        const rotateY = (x / rect.width) * 18;
+
+        layersStack.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      layersStage.addEventListener('mouseleave', () => {
+        layersStack.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      });
+    }
+
+    // 3. Sistema de Notificaciones Toast
+    let toastTimeout;
+    function triggerToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+      
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // 4. Canvas Animado de Luces y Farolillos (Efecto Festivo GetLayers)
+    const canvas = document.getElementById('feria-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.radius = Math.random() * 3 + 1;
+          this.color = Math.random() > 0.5 ? '#f59e0b' : '#e11d48';
+          this.alpha = Math.random() * 0.6 + 0.2;
+          this.speedY = -(Math.random() * 0.5 + 0.1);
+          this.speedX = (Math.random() - 0.5) * 0.4;
+        }
+
+        update() {
+          this.y += this.speedY;
+          this.x += this.speedX;
+
+          if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+            this.reset();
+            this.y = canvas.height + 10;
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // Inicializar partículas
+      for (let i = 0; i < 45; i++) {
+        particles.push(new Particle());
+      }
+
+      function animateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateCanvas);
+      }
+
+      animateCanvas();
+    }
+  </script>
+  <!-- FIN: PORTADA -->
   <!-- INICIO: QUIÉNES SOMOS --> <!-- FIN: QUIÉNES SOMOS -->
   <!-- INICIO: PROGRAMA --> <!-- FIN: PROGRAMA -->
   <!-- INICIO: CARTA --> <!-- FIN: CARTA -->
